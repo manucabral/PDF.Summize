@@ -1,7 +1,7 @@
 {
-    "name": "vite-tailwind-react",
+    "name": "pdf-summize",
     "private": true,
-    "version": "0.0.0",
+    "version": "0.0.1",
     "author": "manucabral",
     "scripts": {
         "start": "npx http-server ./dist",
