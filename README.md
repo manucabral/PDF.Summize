@@ -1,20 +1,7 @@
-# Vite + React + TailwindCSS
+# PDF.Summize
 
-A simple Vite with TailwindCSS app that is configured with React.
+Web application designed to simplify the process of summarizing PDF documents using exclusivily OpenAI.
 
-Ready to deploy on Railway.
-
-## ✨ Features
-
-- Vite
-- React
-- TailwindCSS
-
-## 💁‍♀️ How to use
-Local
-- Install dependencies `yarn`
-- Run `yarn dev`
-
-Railway setup
-- Connect to your Railway project `railway link`
-- Start the development server `railway run yarn dev`
+## Features
+- Quickly summarize PDF documents using OpenAI.
+- Easy-to-use interface for uploading and summarizing your PDF files.
