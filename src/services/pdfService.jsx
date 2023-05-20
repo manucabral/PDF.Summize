@@ -7,7 +7,7 @@ import axios from 'axios'
 export function pdfToText(file) {
     const formData = new FormData()
     formData.append('file', file)
-    return axios.post('api/ppdf', formData, {
+    return axios.post('api/convert', formData, {
         headers: {
             'Content-Type': 'multipart/form-data',
         },

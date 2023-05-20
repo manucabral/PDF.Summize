@@ -1,22 +1,45 @@
-import { useState } from 'react'
+import openai from './libs/openai'
+import React from 'react'
 import { pdfToText } from './services/pdfService'
 
-export default function App() {
-    const [pages, setPages] = useState(null)
-    const [loading, setLoading] = useState(false)
-    const [isHovered, setIsHovered] = useState(false)
-    const [pdf, setPdf] = useState(null)
 
-    const summarize = async () => {
+export default function App() {
+    const [pages, setPages] = React.useState(null)
+    const [summary, setSummary] = React.useState(null)
+    const [loading, setLoading] = React.useState(false)
+    const [isHovered, setIsHovered] = React.useState(false)
+    const [pdf, setPdf] = React.useState(null)
+
+    const summarize = async (text) => {
+        try{
+            const response = await openai.createCompletion(
+                {
+                    model: 'text-davinci-003',
+                    prompt: `Summarize the following text: ${text}`,
+                    max_tokens: 64,
+                    temperature: 0.3,
+                }
+            )
+            return response.data.choices[0].text
+        }
+        catch(error){
+            alert('Something went wrong while summarizing the text')
+        }
+        finally{
+            setLoading(false)
+        }
+    }
+
+    const convert = async () => {
         if (!pdf) return
         setLoading(true)
         try {
             const response = await pdfToText(pdf)
             setPages(response.data.content)
+            const firstPage = response.data.content[0].text
+            setSummary(await summarize(firstPage))
         } catch (error) {
-            alert('Something went wrong')
-        } finally {
-            setLoading(false)
+            alert('Something went wrong while converting the pdf')
         }
     }
 
@@ -74,7 +97,7 @@ export default function App() {
             <div className="flex items-center gap-2 text-white">
                 <button
                     className="px-4 py-2 text-white bg-orange-500 rounded-lg"
-                    onClick={summarize}
+                    onClick={convert}
                     disabled={loading || !pdf}
                 >
                     {loading ? 'Loading...' : 'Summarize'}
@@ -87,16 +110,12 @@ export default function App() {
                     Clear
                 </button>
             </div>
-            {pages && (
-                <div className="flex flex-col items-center gap-10 text-white h-full overflow-y-auto">
-                    {pages.map((page) => (
-                        <div key={page.page}>
-                            <h1 className="text-2xl font-bold">
-                                Page {page.page}
-                            </h1>
-                            <p>{page.text}</p>
-                        </div>
-                    ))}
+            {pages && summary && (
+                <div className="flex flex-col items-center gap-10 h-full overflow-y-auto"> 
+                    <h2 className="text-2xl font-bold text-white">
+                        Summary
+                    </h2>
+                    <p className="text-white">{summary}</p>
                 </div>
             )}
         </main>
